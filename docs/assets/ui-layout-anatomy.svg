@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="uiBg" x1="0" y1="0" x2="1200" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B0D11" />
+      <stop offset="100%" stop-color="#10131A" />
+    </linearGradient>
+    <linearGradient id="progressFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#34D399" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Frame -->
+  <rect width="1200" height="640" rx="18" fill="url(#uiBg)" />
+  <rect x="1.5" y="1.5" width="1197" height="637" rx="16.5" stroke="#222631" stroke-width="2" />
+
+  <!-- Header Caption -->
+  <text x="36" y="36" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="700">
+    Broadcast Studio UI Anatomy — Atmospheric Minimalism &amp; High-Craft Dark UI
+  </text>
+  <text x="36" y="56" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11.5">
+    3-Zone Top Bar · Abbreviated Discover Cards w/ Inline Scrubbers · Interactive Synchronized Reader · Persistent Master Deck
+  </text>
+
+  <!-- App Viewport Wireframe Box -->
+  <rect x="36" y="74" width="1128" height="530" rx="14" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+
+  <!-- 1. TOP BAR CONTRACT (h-14) -->
+  <rect x="36" y="74" width="1128" height="52" rx="14" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <!-- Zone 1: Brand -->
+  <rect x="56" y="88" width="24" height="24" rx="6" fill="#1C2029" stroke="#2E3440" />
+  <circle cx="68" cy="100" r="5" fill="#60A5FA" />
+  <text x="90" y="104" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Discover Audio Radio
+  </text>
+  <!-- Zone 2: 4 Text Tabs -->
+  <text x="410" y="104" fill="#F3F4F6" font-family="'DM Sans', sans-serif" font-size="12.5" font-weight="600">
+    Discover Feed
+  </text>
+  <line x1="410" y1="125" x2="492" y2="125" stroke="#60A5FA" stroke-width="2.5" />
+  <text x="524" y="104" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="12.5">
+    Agent Vault
+  </text>
+  <text x="624" y="104" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="12.5">
+    Ingestion Bridges
+  </text>
+  <text x="754" y="104" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="12.5">
+    Tune &amp; Voices
+  </text>
+  <!-- Zone 3: Single Primary Action -->
+  <rect x="1024" y="86" width="120" height="28" rx="6" fill="#60A5FA" />
+  <text x="1042" y="104" fill="#0B0D11" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="700">
+    + Custom Audio
+  </text>
+
+  <!-- LEFT PANE: ABBREVIATED DISCOVER STREAM (60% width) -->
+  <g transform="translate(56, 144)">
+    <!-- Toolbar / Search / Filter -->
+    <rect x="0" y="0" width="630" height="36" rx="8" fill="#13161C" stroke="#222631" />
+    <text x="16" y="22" fill="#6B7280" font-family="'DM Sans', sans-serif" font-size="11.5">
+      Search verbatim scripts, publishers, or tags...
+    </text>
+    <text x="455" y="22" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11">
+      ALL · ARTICLES · X · VIDEO
+    </text>
+
+    <!-- Card 1 (Active Playing Card) -->
+    <rect x="0" y="48" width="630" height="154" rx="12" fill="#13161C" stroke="#60A5FA" stroke-width="1.5" />
+    <text x="20" y="72" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600">
+      TOM'S HARDWARE · BY PAUL ALCORN · ARTICLE · VOICE: ANDREW (+10% / +0Hz)
+    </text>
+    <text x="20" y="96" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="15.5" font-weight="700">
+      Next-Gen Chiplets Push Local AI Inference Past 120 Tokens/Sec
+    </text>
+    <text x="20" y="118" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="12">
+      Full verbatim body capture with zero summarization. Stripped newsletter popups and DOM ads...
+    </text>
+    <!-- Thumbnail Box -->
+    <rect x="524" y="64" width="88" height="66" rx="8" fill="#1C2029" stroke="#2E3440" />
+    <text x="546" y="101" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10">
+      4:3 IMG
+    </text>
+
+    <!-- Inline Transport Row -->
+    <rect x="20" y="142" width="592" height="44" rx="8" fill="#0B0D11" stroke="#222631" />
+    <circle cx="44" cy="164" r="13" fill="#60A5FA" />
+    <rect x="40" y="159" width="3" height="10" fill="#0B0D11" />
+    <rect x="45" y="159" width="3" height="10" fill="#0B0D11" />
+    <text x="68" y="168" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      -15s  +15s
+    </text>
+    <rect x="136" y="161" width="270" height="6" rx="3" fill="#222631" />
+    <rect x="136" y="161" width="118" height="6" rx="3" fill="url(#progressFill)" />
+    <text x="418" y="168" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      01:42 / 04:15
+    </text>
+    <text x="514" y="168" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600">
+      [READER] [WEB ↗]
+    </text>
+
+    <!-- Card 2 (Queued / Ready Card) -->
+    <rect x="0" y="216" width="630" height="138" rx="12" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+    <text x="20" y="240" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600">
+      X / TWITTER + LINKED BLOG · @REPLIT · VOICE: AVA (+15% / +2Hz)
+    </text>
+    <text x="20" y="264" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="700">
+      Autonomous Background Agents Now Verify Full-Stack Builds Before Merge
+    </text>
+    <text x="20" y="286" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="12">
+      Reads post text verbatim + automatically follows outbound t.co link to scrape full engineering blog...
+    </text>
+    <rect x="20" y="302" width="592" height="38" rx="8" fill="#0B0D11" stroke="#222631" />
+    <circle cx="44" cy="321" r="11" fill="#1C2029" stroke="#60A5FA" />
+    <polygon points="41,316 49,321 41,326" fill="#60A5FA" />
+    <rect x="136" y="318" width="270" height="6" rx="3" fill="#222631" />
+    <text x="418" y="325" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      00:00 / 05:40
+    </text>
+    <text x="514" y="325" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      [.MD] [.JSON]
+    </text>
+  </g>
+
+  <!-- RIGHT PANE: SYNCHRONIZED READER & EXTRACTED LINKS (40% width) -->
+  <g transform="translate(706, 144)">
+    <rect x="0" y="0" width="438" height="354" rx="12" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+    <!-- Reader Header -->
+    <text x="20" y="28" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600">
+      SYNCHRONIZED VERBATIM READER · CLICK PARAGRAPH TO SEEK
+    </text>
+    <line x1="0" y1="42" x2="438" y2="42" stroke="#222631" />
+
+    <!-- Paragraph 1 -->
+    <rect x="16" y="54" width="406" height="58" rx="8" fill="#0B0D11" stroke="#222631" />
+    <text x="28" y="72" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="10">
+      ¶ 01 · 00:00
+    </text>
+    <text x="28" y="90" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11.5">
+      Tom's Hardware by Paul Alcorn. Next-Gen Chiplets Push Local
+    </text>
+    <text x="28" y="105" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11.5">
+      AI Inference Past 120 Tokens Per Second.
+    </text>
+
+    <!-- Paragraph 2 (Active Highlighted Paragraph) -->
+    <rect x="16" y="120" width="406" height="82" rx="8" fill="#172033" stroke="#60A5FA" stroke-width="1.5" />
+    <text x="28" y="138" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">
+      ▶ ACTIVE PARAGRAPH · ¶ 02 · 01:18 (CLICK TO SCRUB)
+    </text>
+    <text x="28" y="158" fill="#F3F4F6" font-family="'DM Sans', sans-serif" font-size="11.5">
+      Unlike traditional cloud-only pipelines, the new modular memory
+    </text>
+    <text x="28" y="175" fill="#F3F4F6" font-family="'DM Sans', sans-serif" font-size="11.5">
+      interconnect sustains 800 GB/s bandwidth under a 35W thermal
+    </text>
+    <text x="28" y="192" fill="#F3F4F6" font-family="'DM Sans', sans-serif" font-size="11.5">
+      envelope, making local desktop RAG agents instantaneous.
+    </text>
+
+    <!-- Extracted Links Sub-panel -->
+    <rect x="16" y="214" width="406" height="124" rx="8" fill="#0B0D11" stroke="#222631" />
+    <text x="28" y="236" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600">
+      EXTRACTED OUTBOUND LINKS &amp; ARTIFACT EXPORTS
+    </text>
+    <text x="28" y="258" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11">
+      ↗ [1] IEEE Solid-State Circuits Whitepaper (doi.org/10.1109...)
+    </text>
+    <text x="28" y="278" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11">
+      ↗ [2] GitHub Benchmark Suite Repository (github.com/...)
+    </text>
+    <rect x="28" y="294" width="120" height="28" rx="6" fill="#13161C" stroke="#2E3440" />
+    <text x="42" y="312" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      ⬇ Export .MD
+    </text>
+    <rect x="158" y="294" width="128" height="28" rx="6" fill="#13161C" stroke="#2E3440" />
+    <text x="172" y="312" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      ⬇ Export .JSON
+    </text>
+    <rect x="296" y="294" width="114" height="28" rx="6" fill="#13161C" stroke="#60A5FA" />
+    <text x="310" y="312" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10.5">
+      Open Web ↗
+    </text>
+  </g>
+
+  <!-- 3. PERSISTENT MASTER TRANSPORT DECK (Bottom Bar) -->
+  <rect x="36" y="516" width="1128" height="88" rx="14" fill="#13161C" stroke="#2E3440" stroke-width="1.5" />
+  <circle cx="82" cy="560" r="22" fill="#60A5FA" />
+  <rect x="76" y="551" width="4" height="18" fill="#0B0D11" />
+  <rect x="84" y="551" width="4" height="18" fill="#0B0D11" />
+
+  <text x="122" y="548" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700">
+    Next-Gen Chiplets Push Local AI Inference Past 120 Tokens/Sec
+  </text>
+  <text x="122" y="568" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    TOM'S HARDWARE · BY PAUL ALCORN · PRE-GEN VOICE: ANDREW (+10% RATE · +0Hz PITCH)
+  </text>
+  <!-- Scrubber Bar -->
+  <rect x="122" y="580" width="680" height="7" rx="3.5" fill="#0B0D11" stroke="#222631" />
+  <rect x="122" y="580" width="310" height="7" rx="3.5" fill="url(#progressFill)" />
+  <circle cx="432" cy="583.5" r="6" fill="#F3F4F6" />
+
+  <!-- Right Master Controls -->
+  <text x="826" y="564" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="600">
+    01:42 / 04:15
+  </text>
+  <rect x="930" y="544" width="96" height="32" rx="6" fill="#0B0D11" stroke="#222631" />
+  <text x="944" y="564" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11">
+    1.0x NATIVE
+  </text>
+  <rect x="1038" y="544" width="104" height="32" rx="6" fill="#172033" stroke="#60A5FA" />
+  <text x="1052" y="564" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    Reader Open
+  </text>
+</svg>

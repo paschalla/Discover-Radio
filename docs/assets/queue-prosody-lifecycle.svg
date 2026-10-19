@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 320" width="100%" height="100%" fill="none">
+  <defs>
+    <marker id="arrRight" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#60A5FA" />
+    </marker>
+    <marker id="arrEmerald" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34D399" />
+    </marker>
+  </defs>
+
+  <rect width="1100" height="320" rx="16" fill="#0B0D11" />
+  <rect x="1.5" y="1.5" width="1097" height="317" rx="14.5" stroke="#222631" stroke-width="2" />
+
+  <text x="36" y="38" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="700">
+    Queue-Aware Pre-Generation Prosody Hot-Reloading &amp; Episode Immutability
+  </text>
+  <text x="36" y="58" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    What happens when you adjust TTS Rate (%), Pitch (Hz), or Voice Pool while a batch is actively running
+  </text>
+
+  <!-- Card 1: Episode #1 (Completed) -->
+  <rect x="36" y="84" width="296" height="196" rx="12" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <text x="56" y="112" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    EPISODE #1 · COMPLETED IN SQLITE
+  </text>
+  <text x="56" y="136" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700">
+    Immutable Disk &amp; DB Record
+  </text>
+  <rect x="56" y="152" width="256" height="72" rx="8" fill="#0B0D11" stroke="#222631" />
+  <text x="70" y="174" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    voice_used: &quot;en-US-AndrewNeural&quot;
+  </text>
+  <text x="70" y="192" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    tts_rate_used: &quot;+5%&quot;
+  </text>
+  <text x="70" y="210" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    tts_pitch_used: &quot;+0Hz&quot;
+  </text>
+  <text x="56" y="252" fill="#34D399" font-family="'DM Sans', sans-serif" font-size="12" font-weight="600">
+    ✓ 100% Untouched on Disk
+  </text>
+
+  <line x1="332" y1="182" x2="368" y2="182" stroke="#60A5FA" stroke-width="2" marker-end="url(#arrRight)" />
+
+  <!-- Card 2: Episode #2 (Currently Generating In-Flight) -->
+  <rect x="372" y="84" width="320" height="196" rx="12" fill="#13161C" stroke="#60A5FA" stroke-width="1.5" />
+  <text x="392" y="112" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    EPISODE #2 · CURRENTLY SYNTHESIZING
+  </text>
+  <text x="392" y="136" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700">
+    In-Flight Snapshot Locked
+  </text>
+  <rect x="392" y="152" width="280" height="72" rx="8" fill="#0B0D11" stroke="#222631" />
+  <text x="406" y="174" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    locked_voice: &quot;en-US-AvaNeural&quot;
+  </text>
+  <text x="406" y="192" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="11">
+    locked_rate: &quot;+5%&quot; (From start)
+  </text>
+  <text x="406" y="210" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="11">
+    ⚡ User saves +15% / -4Hz in UI now!
+  </text>
+  <text x="392" y="252" fill="#60A5FA" font-family="'DM Sans', sans-serif" font-size="12" font-weight="600">
+    ✓ Finishes cleanly with +5% / +0Hz
+  </text>
+
+  <line x1="692" y1="182" x2="728" y2="182" stroke="#34D399" stroke-width="2" marker-end="url(#arrEmerald)" />
+
+  <!-- Card 3: Episode #3 (Next in Queue) -->
+  <rect x="732" y="84" width="332" height="196" rx="12" fill="#13161C" stroke="#34D399" stroke-width="1.5" />
+  <text x="752" y="112" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    EPISODE #3 · NEXT POPPED FROM QUEUE
+  </text>
+  <text x="752" y="136" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700">
+    Hot-Reloads Fresh config.json
+  </text>
+  <rect x="752" y="152" width="292" height="72" rx="8" fill="#0B0D11" stroke="#34D399" stroke-opacity="0.5" />
+  <text x="766" y="174" fill="#F3F4F6" font-family="'JetBrains Mono', monospace" font-size="11">
+    locked_voice: &quot;en-US-BrianNeural&quot;
+  </text>
+  <text x="766" y="192" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="11">
+    locked_rate: &quot;+15%&quot; (Hot-Reloaded)
+  </text>
+  <text x="766" y="210" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="11">
+    locked_pitch: &quot;-4Hz&quot; (Hot-Reloaded)
+  </text>
+  <text x="752" y="252" fill="#34D399" font-family="'DM Sans', sans-serif" font-size="12" font-weight="600">
+    ✓ Immediately applies new prosody
+  </text>
+</svg>

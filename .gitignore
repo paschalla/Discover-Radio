@@ -6,3 +6,13 @@ coverage/
 *.log
 .env*
 !.env.example
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/episodes_store.json
+data/config.json
+data/audio/*.mp3
+data/exports/*.md
+data/exports/*.json
+google_auth_state.json
+

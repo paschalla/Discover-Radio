@@ -1,0 +1,302 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%" height="100%" fill="none">
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#60A5FA" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34D399" />
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#F59E0B" />
+    </marker>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="860" rx="18" fill="#0B0D11" />
+  <rect x="1.5" y="1.5" width="1197" height="857" rx="16.5" stroke="#222631" stroke-width="2" />
+
+  <!-- Header Title -->
+  <text x="40" y="42" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="700">
+    System Architecture — Discover Audio Radio &amp; Agent Knowledge Vault
+  </text>
+  <text x="40" y="64" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="12">
+    End-to-End Ingestion · Multi-Layer SQLite Deduplication · Pre-Gen Edge-TTS · Two-Stage RAG Export
+  </text>
+
+  <!-- ===================================================================== -->
+  <!-- LAYER 1: MULTI-CHANNEL INGESTION SOURCES                              -->
+  <!-- ===================================================================== -->
+  <rect x="36" y="84" width="1128" height="142" rx="14" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <text x="56" y="110" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    01. MULTI-CHANNEL DYNAMIC INGESTION LAYER
+  </text>
+
+  <!-- Box 1A -->
+  <rect x="56" y="124" width="256" height="84" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="72" y="148" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    A. Scheduled Feed Poller
+  </text>
+  <text x="72" y="168" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Configurable Cron (1h–24h)
+  </text>
+  <text x="72" y="185" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Tech/Topic RSS &amp; Google News
+  </text>
+  <text x="72" y="200" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="10">
+    POST /api/batch/run
+  </text>
+
+  <!-- Box 1B -->
+  <rect x="332" y="124" width="260" height="84" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="348" y="148" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    B. Android Discover Bridge
+  </text>
+  <text x="348" y="168" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Native Share / HTTP Shortcuts
+  </text>
+  <text x="348" y="185" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Tasker / MacroDroid AutoInput
+  </text>
+  <text x="348" y="200" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="10">
+    POST /api/webhook/discover
+  </text>
+
+  <!-- Box 1C -->
+  <rect x="612" y="124" width="260" height="84" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="628" y="148" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    C. Playwright Cookie Scraper
+  </text>
+  <text x="628" y="168" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Emulates Pixel 7 Chrome Session
+  </text>
+  <text x="628" y="185" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Synced Scroll Depth (3x–20x)
+  </text>
+  <text x="628" y="200" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="10">
+    GET /api/bridges/playwright-script
+  </text>
+
+  <!-- Box 1D -->
+  <rect x="892" y="124" width="252" height="84" rx="10" fill="#0B0D11" stroke="#60A5FA" stroke-width="1.5" />
+  <text x="908" y="148" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    D. Custom On-Demand Ingest
+  </text>
+  <text x="908" y="168" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Web URL, X Post, or Raw Text
+  </text>
+  <text x="908" y="185" fill="#34D399" font-family="'DM Sans', sans-serif" font-size="11">
+    • Screenshot Vision (Gemini OCR)
+  </text>
+  <text x="908" y="200" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10">
+    POST /api/episodes/custom
+  </text>
+
+  <!-- Connectors Layer 1 -> Layer 2 -->
+  <line x1="600" y1="226" x2="600" y2="258" stroke="#60A5FA" stroke-width="2" marker-end="url(#arrowBlue)" />
+
+  <!-- ===================================================================== -->
+  <!-- LAYER 2: SEQUENTIAL QUEUE MANAGER & SMART CONTENT ROUTER              -->
+  <!-- ===================================================================== -->
+  <rect x="36" y="262" width="1128" height="206" rx="14" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <text x="56" y="288" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    02. SEQUENTIAL GENERATION QUEUE &amp; SMART CONTENT ROUTER (NODE / EXPRESS)
+  </text>
+
+  <!-- Dedupe & Snapshot Lock Box -->
+  <rect x="56" y="302" width="340" height="146" rx="10" fill="#0B0D11" stroke="#34D399" stroke-width="1.5" />
+  <text x="74" y="326" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Queue Gate: Dedupe &amp; Hot-Reload Lock
+  </text>
+  <text x="74" y="348" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    1. Priority Dequeue: Immediate (#1) or Append
+  </text>
+  <text x="74" y="368" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    2. Canonical URL SHA-256 + Title Slug Check
+  </text>
+  <text x="74" y="388" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    3. Reloads fresh config.json right before item start
+  </text>
+  <text x="74" y="408" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="10">
+    Locks: Voice Persona · Rate (%) · Pitch (Hz)
+  </text>
+  <text x="74" y="428" fill="#6B7280" font-family="'JetBrains Mono', monospace" font-size="10">
+    In-flight &amp; past episodes stay 100% immutable
+  </text>
+
+  <!-- Arrow from Gate to Routers -->
+  <line x1="396" y1="375" x2="432" y2="375" stroke="#34D399" stroke-width="2" marker-end="url(#arrowGreen)" />
+
+  <!-- Route 1: Web Articles -->
+  <rect x="436" y="302" width="224" height="146" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="452" y="326" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Route 1: Web Articles
+  </text>
+  <text x="452" y="346" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10">
+    Tom&apos;s Hardware · XDA · CNX
+  </text>
+  <text x="452" y="368" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Jina Reader (r.jina.ai) +
+  </text>
+  <text x="452" y="384" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Readability DOM fallback
+  </text>
+  <text x="452" y="404" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Strips modals/ads/popups
+  </text>
+  <text x="452" y="424" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Extracts reference links
+  </text>
+
+  <!-- Route 2: X / Twitter + Blog Follow -->
+  <rect x="676" y="302" width="224" height="146" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="692" y="326" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Route 2: X + Linked Blog
+  </text>
+  <text x="692" y="346" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10">
+    api.fxtwitter.com
+  </text>
+  <text x="692" y="368" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Reads main post (ignores
+  </text>
+  <text x="692" y="384" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    reply-guy comment noise)
+  </text>
+  <text x="692" y="404" fill="#34D399" font-family="'DM Sans', sans-serif" font-size="11">
+    • Follows secondary blog URLs
+  </text>
+  <text x="692" y="424" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    &amp; scrapes full blog post
+  </text>
+
+  <!-- Route 3: YouTube & Vision -->
+  <rect x="916" y="302" width="228" height="146" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="932" y="326" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Route 3: Video &amp; Vision
+  </text>
+  <text x="932" y="346" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="10">
+    gemini-3.8-flash
+  </text>
+  <text x="932" y="368" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Filters Music / Guitar Tabs
+  </text>
+  <text x="932" y="386" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Tech Shorts -&gt; Transcript
+  </text>
+  <text x="932" y="406" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • 100% Verbatim Cleaner +
+  </text>
+  <text x="932" y="424" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    RAG Keywords &amp; Summary
+  </text>
+
+  <!-- Connectors Layer 2 -> Layer 3 -->
+  <line x1="600" y1="468" x2="600" y2="500" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrowAmber)" />
+
+  <!-- ===================================================================== -->
+  <!-- LAYER 3: NEURAL TTS SYNTHESIS & PERSISTENT STORAGE VAULT              -->
+  <!-- ===================================================================== -->
+  <rect x="36" y="504" width="1128" height="156" rx="14" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <text x="56" y="530" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    03. PRE-GENERATION EDGE-TTS SYNTHESIS &amp; PERSISTENT STORAGE LAYER
+  </text>
+
+  <!-- TTS Box -->
+  <rect x="56" y="544" width="350" height="96" rx="10" fill="#0B0D11" stroke="#F59E0B" stroke-width="1.5" />
+  <text x="74" y="568" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Microsoft Edge Neural TTS (msedge-tts)
+  </text>
+  <text x="74" y="588" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Pre-generation SSML rate (%) &amp; pitch (Hz)
+  </text>
+  <text x="74" y="606" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • 12 EN-US Voice Rotation or Single Locked
+  </text>
+  <text x="74" y="624" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="10">
+    Outputs: data/audio/&lt;url_hash&gt;.mp3
+  </text>
+
+  <!-- SQLite DB Box -->
+  <rect x="424" y="544" width="350" height="96" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="442" y="568" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    SQLite Database (data/discover_radio.db)
+  </text>
+  <text x="442" y="588" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Tables: episodes, seen_hashes, feed_sources
+  </text>
+  <text x="442" y="606" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • Stores paragraph weightRatios (0.0–1.0)
+  </text>
+  <text x="442" y="624" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="10">
+    Config Store: data/config.json
+  </text>
+
+  <!-- RAG Vault & RSS Box -->
+  <rect x="792" y="544" width="352" height="96" rx="10" fill="#0B0D11" stroke="#34D399" stroke-width="1.5" />
+  <text x="810" y="568" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
+    Agent RAG Vault &amp; Podcast RSS 2.0
+  </text>
+  <text x="810" y="588" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • data/exports/md/*.md (YAML Frontmatter)
+  </text>
+  <text x="810" y="606" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    • data/exports/registry_index.json (Stage-1)
+  </text>
+  <text x="810" y="624" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="10">
+    Live Feed: GET /api/rss.xml
+  </text>
+
+  <!-- Connectors Layer 3 -> Layer 4 -->
+  <line x1="600" y1="660" x2="600" y2="692" stroke="#60A5FA" stroke-width="2" marker-end="url(#arrowBlue)" />
+
+  <!-- ===================================================================== -->
+  <!-- LAYER 4: REACT + TYPESCRIPT + TAILWIND PWA CLIENT                     -->
+  <!-- ===================================================================== -->
+  <rect x="36" y="696" width="1128" height="136" rx="14" fill="#13161C" stroke="#222631" stroke-width="1.5" />
+  <text x="56" y="722" fill="#60A5FA" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">
+    04. INSTALLABLE REACT / PWA CLIENT (ZERO HARDCODED EPISODES · LIVE API SYNC)
+  </text>
+
+  <rect x="56" y="736" width="256" height="78" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="72" y="758" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">
+    Abbreviated Feed &amp; Transport
+  </text>
+  <text x="72" y="776" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Inline Play/Scrub bar, live queue
+  </text>
+  <text x="72" y="794" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    banner &amp; MediaSession lockscreen
+  </text>
+
+  <rect x="332" y="736" width="260" height="78" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="348" y="758" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">
+    &quot;Read From Here&quot; Split Reader
+  </text>
+  <text x="348" y="776" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Clickable paragraph seeking &amp;
+  </text>
+  <text x="348" y="794" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    extracted secondary links bar
+  </text>
+
+  <rect x="612" y="736" width="260" height="78" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="628" y="758" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">
+    Two-Stage RAG Vault Explorer
+  </text>
+  <text x="628" y="776" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Interactive RAG query tester,
+  </text>
+  <text x="628" y="794" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    registry_index.json &amp; .md/.json
+  </text>
+
+  <rect x="892" y="736" width="252" height="78" rx="10" fill="#0B0D11" stroke="#222631" stroke-width="1.5" />
+  <text x="908" y="758" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700">
+    Tune &amp; Calibration Matrix
+  </text>
+  <text x="908" y="776" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Pre-gen Rate/Pitch, 12-Voice
+  </text>
+  <text x="908" y="794" fill="#9CA3AF" font-family="'DM Sans', sans-serif" font-size="11">
+    Matrix &amp; Test Episode generator
+  </text>
+</svg>
