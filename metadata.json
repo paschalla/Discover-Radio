@@ -1,0 +1,6 @@
+{
+  "name": "Discover Audio Radio & Agent Vault",
+  "description": "Automated verbatim audio-readthrough broadcast, Edge-TTS neural voice rotation engine, and RAG knowledge exporter for Google Discover and custom web feeds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
