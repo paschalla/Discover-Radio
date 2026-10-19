@@ -6,6 +6,7 @@ import {
   Play,
   RotateCcw,
   RotateCw,
+  Shuffle,
   SkipBack,
   SkipForward,
 } from 'lucide-react';
@@ -18,6 +19,8 @@ interface MasterPlayerProps {
   duration: number;
   skipBackSec: number;
   skipForwardSec: number;
+  isShuffleMode?: boolean;
+  onToggleShuffle?: () => void;
   onTogglePlay: () => void;
   onPrevTrack: () => void;
   onNextTrack: () => void;
@@ -43,6 +46,8 @@ export const MasterPlayer: React.FC<MasterPlayerProps> = ({
   duration,
   skipBackSec,
   skipForwardSec,
+  isShuffleMode,
+  onToggleShuffle,
   onTogglePlay,
   onPrevTrack,
   onNextTrack,
@@ -82,6 +87,14 @@ export const MasterPlayer: React.FC<MasterPlayerProps> = ({
                 <span className="font-mono tabular-nums text-[#6B7280]">
                   Pre-Gen {currentEpisode.tts_rate_used} / {currentEpisode.tts_pitch_used}
                 </span>
+                {isShuffleMode && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-1.5 py-0.2 rounded border border-emerald-800/40">
+                      SHUFFLE ON
+                    </span>
+                  </>
+                )}
               </div>
               <p className="text-xs sm:text-sm font-semibold text-[#F3F4F6] truncate group-hover:text-[var(--accent)] transition-colors">
                 {currentEpisode.title}
@@ -121,7 +134,29 @@ export const MasterPlayer: React.FC<MasterPlayerProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center justify-center gap-4 sm:gap-6">
+          <div className="flex items-center justify-center gap-3 sm:gap-5">
+            {onToggleShuffle && (
+              <button
+                type="button"
+                onClick={onToggleShuffle}
+                title={
+                  isShuffleMode
+                    ? 'Shuffle: Active (Prioritizing Unlistened Stories)'
+                    : 'Turn On Shuffle (Unlistened First)'
+                }
+                className={`p-1.5 transition-colors cursor-pointer relative rounded-lg ${
+                  isShuffleMode
+                    ? 'text-[var(--accent)] bg-[var(--accent)]/15 border border-[var(--accent)]/30'
+                    : 'text-[#6B7280] hover:text-[#9CA3AF]'
+                }`}
+              >
+                <Shuffle className="w-3.5 h-3.5" />
+                {isShuffleMode && (
+                  <span className="sr-only">Shuffle enabled</span>
+                )}
+              </button>
+            )}
+
             <button
               type="button"
               onClick={onPrevTrack}

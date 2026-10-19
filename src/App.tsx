@@ -17,10 +17,12 @@ import { FeedView } from './components/FeedView.tsx';
 import { ReaderPane } from './components/ReaderPane.tsx';
 import { MasterPlayer } from './components/MasterPlayer.tsx';
 import { CustomIngestModal } from './components/CustomIngestModal.tsx';
+import { BatchCompletionModal } from './components/BatchCompletionModal.tsx';
 import { VaultView } from './components/VaultView.tsx';
 import { BridgesView } from './components/BridgesView.tsx';
 import { TuneView } from './components/TuneView.tsx';
 import { useOnlineStatus } from './hooks/usePWAInstall.ts';
+import { useListeningHistory } from './hooks/useListeningHistory.ts';
 
 export default function App() {
   // ZERO HARDCODED EPISODES: All data comes dynamically from SQLite via /api/*
@@ -44,6 +46,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('feed');
+  const [feedSubView, setFeedSubView] = useState<'feed' | 'history'>('feed');
   const [selectedEpisodeId, setSelectedEpisodeId] = useState<string | null>(null);
   const [playingEpisodeId, setPlayingEpisodeId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,86 +55,95 @@ export default function App() {
 
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [isMobileReaderOpen, setIsMobileReaderOpen] = useState(false);
+  const [isBatchCompletionModalOpen, setIsBatchCompletionModalOpen] = useState(false);
   const [isBatchTriggering, setIsBatchTriggering] = useState(false);
   const [isTestGenerating, setIsTestGenerating] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastCompletedCountRef = useRef<number>(0);
+  const hasRestoredResumeRef = useRef<boolean>(false);
+  const lastProgressUpdateRef = useRef<number>(0);
   const isOnline = useOnlineStatus();
 
-  // Apply CSS custom properties whenever UI config changes
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--accent',
-      config.ui.accent_color || '#60A5FA'
-    );
-    document.documentElement.style.setProperty(
-      '--reader-font-size',
-      `${config.ui.reader_font_size || 16}px`
-    );
-    document.documentElement.style.setProperty(
-      '--reader-line-height',
-      String(config.ui.reader_line_height || 1.65)
-    );
-  }, [
-    config.ui.accent_color,
-    config.ui.reader_font_size,
-    config.ui.reader_line_height,
-  ]);
+  // Listening History, Resume State, and Intelligent Shuffle
+  const {
+    history,
+    resumeState,
+    isShuffleMode,
+    recordProgress,
+    saveResumeState,
+    clearResumeState,
+    clearHistory,
+    toggleShuffle,
+    getUnlistenedEpisodes,
+    getNextShuffleEpisode,
+  } = useListeningHistory();
 
+  // Fetch episodes from SQLite
   const fetchEpisodes = useCallback(async () => {
     try {
       const res = await fetch('/api/episodes');
       if (!res.ok) return;
       const data = await res.json();
-      const loaded: Episode[] = data.episodes || [];
-      setEpisodes(loaded);
-      if (data.stats) {
-        setDedupeStats(data.stats);
+      if (Array.isArray(data.episodes)) {
+        setEpisodes(data.episodes);
       }
-      setSelectedEpisodeId((prev) => {
-        if (prev && loaded.some((e) => e.id === prev)) return prev;
-        return loaded.length > 0 ? loaded[0].id : null;
-      });
-    } catch {
-      // ignore network error when offline
+      if (data.dedupe_stats) {
+        setDedupeStats(data.dedupe_stats);
+      }
+    } catch (err) {
+      console.warn('Failed to fetch episodes:', err);
     }
   }, []);
 
+  // Fetch active configuration, voices, and RSS feed sources
   const fetchConfigAndFeeds = useCallback(async () => {
     try {
-      const [cfgRes, feedsRes] = await Promise.all([
+      const [cfgRes, voicesRes, feedsRes] = await Promise.all([
         fetch('/api/config'),
+        fetch('/api/voices'),
         fetch('/api/feeds'),
       ]);
+
       if (cfgRes.ok) {
         const cfgData = await cfgRes.json();
         if (cfgData.config) setConfig(cfgData.config);
-        if (cfgData.available_voices) setAvailableVoices(cfgData.available_voices);
-        if (cfgData.dedupe_stats) setDedupeStats(cfgData.dedupe_stats);
       }
+
+      if (voicesRes.ok) {
+        const vData = await voicesRes.json();
+        if (Array.isArray(vData.voices)) setAvailableVoices(vData.voices);
+      }
+
       if (feedsRes.ok) {
-        const feedsData = await feedsRes.json();
-        if (feedsData.feeds) setFeeds(feedsData.feeds);
+        const fData = await feedsRes.json();
+        if (Array.isArray(fData.feeds)) setFeeds(fData.feeds);
       }
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn('Failed to fetch config/feeds:', err);
     }
   }, []);
 
+  // Fetch live generation queue status
   const fetchQueueStatus = useCallback(async () => {
     try {
-      const res = await fetch('/api/queue');
+      const res = await fetch('/api/queue/status');
       if (!res.ok) return;
-      const status: QueueStatus = await res.json();
-      setQueueStatus(status);
+      const data = await res.json();
+      if (data.queue) {
+        setQueueStatus(data.queue);
 
-      if (status.completed_in_session !== lastCompletedCountRef.current) {
-        lastCompletedCountRef.current = status.completed_in_session;
-        void fetchEpisodes();
+        // Check if new items finished synthesizing so we can reload the feed list
+        if (
+          data.queue.completed_in_session !== undefined &&
+          data.queue.completed_in_session !== lastCompletedCountRef.current
+        ) {
+          lastCompletedCountRef.current = data.queue.completed_in_session;
+          void fetchEpisodes();
+        }
       }
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn('Failed to fetch queue status:', err);
     }
   }, [fetchEpisodes]);
 
@@ -142,7 +154,38 @@ export default function App() {
     void fetchQueueStatus();
   }, [fetchEpisodes, fetchConfigAndFeeds, fetchQueueStatus]);
 
-  // Poll queue status every 2.5s so live synthesis progress and newly completed items appear automatically
+  // Restore Paused Episode on App Resume:
+  // If an episode was paused during playback, load it into the player and cue to that timestamp
+  useEffect(() => {
+    if (hasRestoredResumeRef.current || episodes.length === 0) return;
+    hasRestoredResumeRef.current = true;
+
+    if (resumeState?.episode_id) {
+      const resumeEp = episodes.find((e) => e.id === resumeState.episode_id);
+      if (resumeEp) {
+        setSelectedEpisodeId(resumeEp.id);
+        setPlayingEpisodeId(resumeEp.id);
+        const audio = audioRef.current;
+        if (audio) {
+          audio.src = resumeEp.audio_url;
+          audio.load();
+          const targetPos = Math.max(0, resumeState.position_sec);
+          setCurrentTime(targetPos);
+
+          const onMeta = () => {
+            if (targetPos > 0 && Number.isFinite(audio.duration)) {
+              audio.currentTime = Math.min(audio.duration, targetPos);
+            }
+            setIsPlaying(false);
+            audio.removeEventListener('loadedmetadata', onMeta);
+          };
+          audio.addEventListener('loadedmetadata', onMeta);
+        }
+      }
+    }
+  }, [episodes, resumeState]);
+
+  // Poll queue status every 2.5s so live synthesis progress appears automatically
   useEffect(() => {
     const interval = setInterval(() => {
       void fetchQueueStatus();
@@ -169,45 +212,59 @@ export default function App() {
         artist: `${currentPlayingEpisode.source} · ${currentPlayingEpisode.voice_used
           .replace(/^en-US-/, '')
           .replace(/Neural$/, '')}`,
-        album: 'Discover Audio Radio',
+        album: 'Discover Radio',
       });
     } catch {
       // ignore
     }
   }, [currentPlayingEpisode]);
 
-  const playEpisode = useCallback((ep: Episode, startRatio = 0) => {
-    const audio = audioRef.current;
-    if (!audio) return;
+  const playEpisode = useCallback(
+    (ep: Episode, startRatio?: number) => {
+      const audio = audioRef.current;
+      if (!audio) return;
 
-    setSelectedEpisodeId(ep.id);
+      setSelectedEpisodeId(ep.id);
 
-    if (playingEpisodeId === ep.id && startRatio === 0) {
-      if (audio.paused) {
+      // Same track toggle play/pause if no explicit start ratio
+      if (playingEpisodeId === ep.id && startRatio === undefined) {
+        if (audio.paused) {
+          void audio.play();
+          setIsPlaying(true);
+        } else {
+          audio.pause();
+          setIsPlaying(false);
+          saveResumeState(ep.id, audio.currentTime, true);
+        }
+        return;
+      }
+
+      setPlayingEpisodeId(ep.id);
+      audio.src = ep.audio_url;
+      audio.load();
+
+      const handleLoadedMetadata = () => {
+        if (startRatio !== undefined && startRatio >= 0 && audio.duration > 0) {
+          audio.currentTime = startRatio * audio.duration;
+        } else {
+          // If returning to a paused story in history, start from last saved position
+          const hist = history[ep.id];
+          if (hist && !hist.completed && hist.last_position_sec > 5) {
+            audio.currentTime = Math.min(audio.duration, hist.last_position_sec);
+          }
+        }
+
         void audio.play();
         setIsPlaying(true);
-      } else {
-        audio.pause();
-        setIsPlaying(false);
-      }
-      return;
-    }
+        recordProgress(ep, audio.currentTime, audio.duration, false);
+        saveResumeState(ep.id, audio.currentTime, false);
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      };
 
-    setPlayingEpisodeId(ep.id);
-    audio.src = ep.audio_url;
-    audio.load();
-
-    const handleLoadedMetadata = () => {
-      if (startRatio > 0 && audio.duration > 0) {
-        audio.currentTime = startRatio * audio.duration;
-      }
-      void audio.play();
-      setIsPlaying(true);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    };
-
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-  }, [playingEpisodeId]);
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    },
+    [playingEpisodeId, history, recordProgress, saveResumeState]
+  );
 
   const handleTogglePlay = useCallback(() => {
     const audio = audioRef.current;
@@ -224,16 +281,29 @@ export default function App() {
     } else {
       audio.pause();
       setIsPlaying(false);
+      if (currentPlayingEpisode) {
+        saveResumeState(currentPlayingEpisode.id, audio.currentTime, true);
+      }
     }
-  }, [playingEpisodeId, currentPlayingEpisode, playEpisode]);
+  }, [playingEpisodeId, currentPlayingEpisode, playEpisode, saveResumeState]);
 
+  // Next Track: respects Shuffle Mode (ignoring listened stories unless no new ones remain)
   const handleNextTrack = useCallback(() => {
     if (episodes.length === 0) return;
+
+    if (isShuffleMode) {
+      const nextEp = getNextShuffleEpisode(episodes, playingEpisodeId);
+      if (nextEp) {
+        playEpisode(nextEp);
+      }
+      return;
+    }
+
     const idx = episodes.findIndex((e) => e.id === playingEpisodeId);
     if (idx >= 0 && idx < episodes.length - 1) {
       playEpisode(episodes[idx + 1]);
     }
-  }, [episodes, playingEpisodeId, playEpisode]);
+  }, [episodes, playingEpisodeId, isShuffleMode, getNextShuffleEpisode, playEpisode]);
 
   const handlePrevTrack = useCallback(() => {
     if (episodes.length === 0) return;
@@ -271,8 +341,10 @@ export default function App() {
         void audio.play();
         setIsPlaying(true);
       }
+      recordProgress(targetEp, audio.currentTime, effectiveDur, false);
+      saveResumeState(targetEp.id, audio.currentTime, false);
     },
-    [currentReaderEpisode, currentPlayingEpisode, playingEpisodeId, playEpisode]
+    [currentReaderEpisode, currentPlayingEpisode, playingEpisodeId, playEpisode, recordProgress, saveResumeState]
   );
 
   // Wire MediaSession action handlers
@@ -339,12 +411,12 @@ export default function App() {
     }
   };
 
-  const handleUpdateConfig = async (nextCfg: AppConfig) => {
-    setConfig(nextCfg);
+  const handleUpdateConfig = async (newConfig: AppConfig) => {
+    setConfig(newConfig);
     const res = await fetch('/api/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nextCfg),
+      body: JSON.stringify(newConfig),
     });
     if (res.ok) {
       const data = await res.json();
@@ -358,6 +430,7 @@ export default function App() {
       audioRef.current.pause();
       setIsPlaying(false);
       setPlayingEpisodeId(null);
+      clearResumeState();
     }
     await fetchEpisodes();
   };
@@ -373,39 +446,6 @@ export default function App() {
       const data = await res.json();
       if (data.dedupe_stats) setDedupeStats(data.dedupe_stats);
     }
-  };
-
-  const handleDownloadMarkdown = (ep: Episode) => {
-    if (ep.md_filename) {
-      const a = document.createElement('a');
-      a.href = `/api/exports/md/${ep.md_filename}`;
-      a.download = ep.md_filename;
-      a.click();
-      return;
-    }
-    const content = `# ${ep.title}\n\nSource: ${ep.source} (${ep.canonical_url})\n\n${ep.verbatim_script}`;
-    const blob = new Blob([content], { type: 'text/markdown' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${ep.id}.md`;
-    a.click();
-  };
-
-  const handleDownloadJson = (ep: Episode) => {
-    if (ep.json_filename) {
-      const a = document.createElement('a');
-      a.href = `/api/exports/json/${ep.json_filename}`;
-      a.download = ep.json_filename;
-      a.click();
-      return;
-    }
-    const blob = new Blob([JSON.stringify(ep, null, 2)], {
-      type: 'application/json',
-    });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${ep.id}.json`;
-    a.click();
   };
 
   const handleAddFeed = async (name: string, url: string, category: string) => {
@@ -440,27 +480,60 @@ export default function App() {
     }
   };
 
+  const handleDownloadMarkdown = (ep: Episode) => {
+    if (ep.md_filename) {
+      const a = document.createElement('a');
+      a.href = `/api/exports/md/${ep.md_filename}`;
+      a.download = ep.md_filename;
+      a.click();
+      return;
+    }
+    const mdContent = `# ${ep.title}\n\nSource: ${ep.source} (${ep.canonical_url})\n\n${ep.verbatim_script}`;
+    const blob = new Blob([mdContent], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${ep.id}.md`;
+    a.click();
+  };
+
+  const handleDownloadJson = (ep: Episode) => {
+    if (ep.json_filename) {
+      const a = document.createElement('a');
+      a.href = `/api/exports/json/${ep.json_filename}`;
+      a.download = ep.json_filename;
+      a.click();
+      return;
+    }
+    const blob = new Blob([JSON.stringify(ep, null, 2)], {
+      type: 'application/json',
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${ep.id}.json`;
+    a.click();
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0D11] text-[#F3F4F6] pb-32">
-      {/* Top Bar Contract (3-Zone Header) */}
+      {/* 3-Zone Top Bar Contract */}
       <TopBar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onOpenCustomModal={() => setIsCustomModalOpen(true)}
       />
 
-      {/* Offline Connectivity Banner */}
+      {/* Offline banner if network drops */}
       {!isOnline && (
         <div className="bg-amber-950/80 border-b border-amber-800 px-4 py-2 text-center text-xs text-amber-200">
           Offline Mode — Cached episodes and local reader remain available.
         </div>
       )}
 
-      {/* Main Responsive Workspace Container (1440px Desktop Presence) */}
+      {/* Main Tabbed Views */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         {activeTab === 'feed' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left 7 Cols: Dynamic Abbreviated Feed & Queue */}
+            {/* Left 7 Cols: Abbreviated Discover Feed & Listening History */}
             <div className="lg:col-span-7">
               <FeedView
                 episodes={episodes}
@@ -475,7 +548,15 @@ export default function App() {
                 ttsConfig={config.tts}
                 isBatchTriggering={isBatchTriggering}
                 isTestGenerating={isTestGenerating}
-                onSelectAndPlay={(ep) => playEpisode(ep)}
+                history={history}
+                resumeState={resumeState}
+                isShuffleMode={isShuffleMode}
+                feedSubView={feedSubView}
+                onToggleShuffle={toggleShuffle}
+                onClearHistory={clearHistory}
+                onChangeFeedSubView={setFeedSubView}
+                onDismissResumeBanner={clearResumeState}
+                onSelectAndPlay={(ep, ratio) => playEpisode(ep, ratio)}
                 onSelectForReader={(ep) => {
                   setSelectedEpisodeId(ep.id);
                   setIsMobileReaderOpen(true);
@@ -574,7 +655,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Custom Content Ingest Modal (URL, Screenshot Vision, Raw Text) */}
+      {/* On-Demand "+ Custom Audio" Ingestion Modal */}
       <CustomIngestModal
         isOpen={isCustomModalOpen}
         ttsConfig={config.tts}
@@ -585,6 +666,26 @@ export default function App() {
         }}
       />
 
+      {/* Queue Completed / Batch Offer Prompt Modal */}
+      <BatchCompletionModal
+        isOpen={isBatchCompletionModalOpen}
+        onClose={() => setIsBatchCompletionModalOpen(false)}
+        onTriggerBatch={handleTriggerBatch}
+        onReplayShuffle={() => {
+          if (!isShuffleMode) toggleShuffle();
+          const ep = getNextShuffleEpisode(episodes, null);
+          if (ep) playEpisode(ep);
+        }}
+        onOpenHistory={() => {
+          setActiveTab('feed');
+          setFeedSubView('history');
+        }}
+        totalListenedCount={
+          Object.values(history).filter((h) => h.completed).length
+        }
+        isBatchTriggering={isBatchTriggering}
+      />
+
       {/* Persistent Bottom Master Transport Bar */}
       <MasterPlayer
         currentEpisode={currentPlayingEpisode}
@@ -593,6 +694,8 @@ export default function App() {
         duration={duration}
         skipBackSec={config.ui.skip_back_sec}
         skipForwardSec={config.ui.skip_forward_sec}
+        isShuffleMode={isShuffleMode}
+        onToggleShuffle={toggleShuffle}
         onTogglePlay={handleTogglePlay}
         onPrevTrack={handlePrevTrack}
         onNextTrack={handleNextTrack}
@@ -607,8 +710,16 @@ export default function App() {
         ref={audioRef}
         preload="metadata"
         onTimeUpdate={() => {
-          if (audioRef.current) {
-            setCurrentTime(audioRef.current.currentTime);
+          const audio = audioRef.current;
+          if (!audio) return;
+          setCurrentTime(audio.currentTime);
+
+          // Periodically save position and listening history
+          const now = Date.now();
+          if (now - lastProgressUpdateRef.current > 1500 && currentPlayingEpisode) {
+            lastProgressUpdateRef.current = now;
+            recordProgress(currentPlayingEpisode, audio.currentTime, audio.duration, false);
+            saveResumeState(currentPlayingEpisode.id, audio.currentTime, false);
           }
         }}
         onLoadedMetadata={() => {
@@ -617,11 +728,76 @@ export default function App() {
           }
         }}
         onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
+        onPause={() => {
+          setIsPlaying(false);
+          const audio = audioRef.current;
+          if (audio && currentPlayingEpisode) {
+            recordProgress(currentPlayingEpisode, audio.currentTime, audio.duration, false);
+            saveResumeState(currentPlayingEpisode.id, audio.currentTime, true);
+          }
+        }}
         onEnded={() => {
           setIsPlaying(false);
-          if (config.ui.auto_advance) {
-            handleNextTrack();
+          const audio = audioRef.current;
+          const completedEpisode = currentPlayingEpisode;
+
+          if (completedEpisode && audio) {
+            recordProgress(completedEpisode, audio.duration, audio.duration, true);
+          }
+          clearResumeState();
+
+          // Check if unlistened stories remain
+          const unlistenedRemaining = getUnlistenedEpisodes(episodes).filter(
+            (e) => e.id !== completedEpisode?.id
+          );
+
+          if (isShuffleMode) {
+            if (unlistenedRemaining.length > 0) {
+              const nextRandom =
+                unlistenedRemaining[
+                  Math.floor(Math.random() * unlistenedRemaining.length)
+                ];
+              playEpisode(nextRandom);
+            } else {
+              // ALL unlistened stories completed! Stop and prompt user
+              setIsBatchCompletionModalOpen(true);
+              if (
+                typeof window !== 'undefined' &&
+                'Notification' in window &&
+                Notification.permission === 'granted'
+              ) {
+                try {
+                  new Notification('Discover Radio — Queue Complete', {
+                    body: "You've finished all unread stories. Tap to generate a fresh batch.",
+                    icon: '/icon.svg',
+                  });
+                } catch {
+                  // ignore
+                }
+              }
+            }
+          } else if (config.ui.auto_advance) {
+            // Sequential Auto-Advance: Check if there's a next unlistened episode ahead
+            if (unlistenedRemaining.length > 0) {
+              handleNextTrack();
+            } else {
+              // End of unlistened queue reached!
+              setIsBatchCompletionModalOpen(true);
+              if (
+                typeof window !== 'undefined' &&
+                'Notification' in window &&
+                Notification.permission === 'granted'
+              ) {
+                try {
+                  new Notification('Discover Radio — Queue Complete', {
+                    body: "You've finished all unread stories. Tap to generate a fresh batch.",
+                    icon: '/icon.svg',
+                  });
+                } catch {
+                  // ignore
+                }
+              }
+            }
           }
         }}
       />

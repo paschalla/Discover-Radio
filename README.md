@@ -1,8 +1,8 @@
 <div align="center">
 
-![Discover Audio Radio & Agent Knowledge Vault](./docs/assets/hero-banner.svg)
+![Discover Radio: Audio Feed & Agent Knowledge Vault](./docs/assets/hero-banner.svg)
 
-# Discover Audio Radio & Agent Knowledge Vault
+# Discover Radio: Audio Feed & Agent Knowledge Vault
 
 **Automated Verbatim Audio-Readthrough Broadcast, Pre-Generation Neural Voice Engine, and Two-Stage RAG Knowledge Vault for Google Discover & Web Feeds**
 
@@ -27,7 +27,7 @@ Scrolling through **Google Discover** on Android surfaces high-signal articles (
 3. **Heterogeneous Media Routing**: X posts often contain a short teaser plus an outbound `t.co` link to the real article; YouTube links mix talk-show clips and tech reviews with music/guitar tabs that should be skipped.
 4. **Ephemeral Knowledge Loss**: Five days after listening to an article, you or your AI coding agents (`Claude Code`, `Cursor`, custom MCP tools) need to recall that exact article without bloating the LLM context window.
 
-**Discover Audio Radio & Agent Knowledge Vault** solves all four problems in a unified, zero-mock full-stack application:
+**Discover Radio: Audio Feed & Agent Knowledge Vault** solves all four problems in a unified, zero-mock full-stack application:
 
 - **Verbatim Broadcast Script Formatting**: Every ingested item starts with a standardized broadcast header (`"[Source] by [Author]. [Title]."`), followed by the **complete verbatim article body** stripped of DOM noise.
 - **Pre-Generation Neural TTS & Voice Rotation**: Uses Microsoft Edge Neural `en-US` voices (`msedge-tts`) with native SSML `<prosody rate="..." pitch="...">` synthesis baked directly into the `.mp3` before playback—never browser pitch-warping.
@@ -94,7 +94,7 @@ flowchart TB
 
 ![Queue & Prosody Lifecycle](./docs/assets/queue-prosody-lifecycle.svg)
 
-Unlike naive web players that apply HTML5 `audio.playbackRate` time-stretching in the browser (which introduces metallic phase artifacts), **Discover Audio Radio** applies rate (`-20%` to `+40%`) and pitch (`-10Hz` to `+10Hz`) inside the SSML `<prosody>` envelope during neural synthesis:
+Unlike naive web players that apply HTML5 `audio.playbackRate` time-stretching in the browser (which introduces metallic phase artifacts), **Discover Radio** applies rate (`-20%` to `+40%`) and pitch (`-10Hz` to `+10Hz`) inside the SSML `<prosody>` envelope during neural synthesis:
 
 ```xml
 <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">

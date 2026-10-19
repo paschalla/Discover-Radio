@@ -17,7 +17,7 @@
 
   <!-- Header Title -->
   <text x="40" y="42" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="700">
-    System Architecture — Discover Audio Radio &amp; Agent Knowledge Vault
+    System Architecture — Discover Radio: Audio Feed &amp; Agent Knowledge Vault
   </text>
   <text x="40" y="64" fill="#9CA3AF" font-family="'JetBrains Mono', monospace" font-size="12">
     End-to-End Ingestion · Multi-Layer SQLite Deduplication · Pre-Gen Edge-TTS · Two-Stage RAG Export

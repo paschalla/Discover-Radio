@@ -52,6 +52,25 @@ export interface Episode {
   created_at: string;
 }
 
+export interface ListeningHistoryItem {
+  episode_id: string;
+  title: string;
+  source: string;
+  author: string;
+  last_played_at: string; // ISO 8601
+  last_position_sec: number;
+  duration_sec: number;
+  completed: boolean;
+  play_count: number;
+}
+
+export interface PlayerPersistedState {
+  episode_id: string;
+  position_sec: number;
+  was_paused: boolean;
+  saved_at: string; // ISO 8601
+}
+
 export interface VoiceOption {
   id: string;
   name: string;

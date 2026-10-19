@@ -31,7 +31,7 @@
   <rect x="56" y="88" width="24" height="24" rx="6" fill="#1C2029" stroke="#2E3440" />
   <circle cx="68" cy="100" r="5" fill="#60A5FA" />
   <text x="90" y="104" fill="#F3F4F6" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700">
-    Discover Audio Radio
+    Discover Radio
   </text>
   <!-- Zone 2: 4 Text Tabs -->
   <text x="410" y="104" fill="#F3F4F6" font-family="'DM Sans', sans-serif" font-size="12.5" font-weight="600">

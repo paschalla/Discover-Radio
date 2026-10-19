@@ -1,6 +1,6 @@
 # Android Discover & Playwright Automation Bridges
 
-Because **Google Discover** on Android does not offer a public RSS feed or official REST API, **Discover Audio Radio & Agent Knowledge Vault** provides four complementary ingestion bridges so you can capture your exact personalized feed automatically or with a single tap on your phone.
+Because **Google Discover** on Android does not offer a public RSS feed or official REST API, **Discover Radio: Audio Feed & Agent Knowledge Vault** provides four complementary ingestion bridges so you can capture your exact personalized feed automatically or with a single tap on your phone.
 
 ---
 

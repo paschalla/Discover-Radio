@@ -755,7 +755,7 @@ export async function fetchFeedItemsFromRss(
   try {
     const res = await fetch(feedUrl, {
       headers: {
-        'User-Agent': 'DiscoverAudioRadio/1.0 (+https://aistudio.google.com)',
+        'User-Agent': 'DiscoverRadio/1.0 (+https://aistudio.google.com)',
         Accept: 'application/rss+xml, application/xml, text/xml, application/atom+xml',
       },
       signal: AbortSignal.timeout(12000),

@@ -669,7 +669,7 @@ If you adjust your voice rotation pool, speech rate, or pitch sliders while a ba
           )
           .join('\n\n');
 
-        const ragPrompt = `You are a precision RAG research assistant querying the user's Discover Audio Knowledge Vault.
+        const ragPrompt = `You are a precision RAG research assistant querying the user's Discover Radio Knowledge Vault.
 Answer the user's question strictly using the verbatim source documents below. Cite the exact article title and source when stating specs, quotes, or facts.
 
 USER QUESTION:
@@ -721,7 +721,7 @@ ${contextDocs}`;
     const hostUrl =
       process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
     const scriptContent = `/**
- * Discover Audio Radio — Automated Mobile Google Discover Scraper (Playwright)
+ * Discover Radio — Automated Mobile Google Discover Scraper (Playwright)
  * Configured Scroll Depth: ${cfg.scraper.scroll_depth}x | Interval: Every ${cfg.scraper.interval_hours}h
  *
  * Usage:
@@ -821,7 +821,7 @@ const SCROLL_DEPTH = ${cfg.scraper.scroll_depth};
     const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
   <channel>
-    <title>Discover Audio Radio (Verbatim Feed)</title>
+    <title>Discover Radio (Verbatim Feed)</title>
     <link>${escapeXml(hostUrl)}</link>
     <description>Automated 100% verbatim audio read-through of your personalized Google Discover and custom tech feed.</description>
     <language>en-us</language>
@@ -854,7 +854,7 @@ ${itemsXml}
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Discover Audio Radio & Agent Vault listening on http://localhost:${PORT}`);
+    console.log(`Discover Radio: Audio Feed & Agent Knowledge Vault listening on http://localhost:${PORT}`);
   });
 }
 

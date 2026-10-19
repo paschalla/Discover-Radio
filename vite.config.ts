@@ -14,8 +14,8 @@ export default defineConfig(() => {
         includeAssets: ['icon.svg', 'apple-touch-icon.png'],
         manifest: {
           id: '/',
-          name: 'Discover Audio Radio & Agent Vault',
-          short_name: 'DiscoverAudio',
+          name: 'Discover Radio: Audio Feed & Agent Knowledge Vault',
+          short_name: 'DiscoverRadio',
           description:
             'Automated verbatim audio-readthrough broadcast, Edge-TTS neural voice rotation engine, and RAG knowledge exporter.',
           theme_color: '#0B0D11',

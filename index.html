@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discover Audio Radio &amp; Agent Vault</title>
+    <title>Discover Radio: Audio Feed &amp; Agent Knowledge Vault</title>
     <meta
       name="description"
       content="Automated verbatim audio-readthrough broadcast, Edge-TTS neural voice rotation engine, and RAG knowledge exporter for Google Discover and custom web feeds."
     />
-    <meta property="og:title" content="Discover Audio Radio &amp; Agent Vault" />
+    <meta property="og:title" content="Discover Radio: Audio Feed &amp; Agent Knowledge Vault" />
     <meta
       property="og:description"
       content="Automated verbatim audio-readthrough broadcast, Edge-TTS neural voice rotation engine, and RAG knowledge exporter for Google Discover and custom web feeds."
@@ -19,7 +19,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="DiscoverAudio" />
+    <meta name="apple-mobile-web-app-title" content="DiscoverRadio" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,6 +28,30 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Gracefully handle benign dev-server WebSocket disconnects in sandbox preview environment
+      window.addEventListener('error', function (e) {
+        if (
+          e &&
+          (e.message?.includes('WebSocket') ||
+            e.error?.message?.includes('WebSocket') ||
+            e.filename?.includes('@vite/client'))
+        ) {
+          e.preventDefault?.();
+          e.stopImmediatePropagation?.();
+        }
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        if (
+          e &&
+          (e.reason?.message?.includes('WebSocket') ||
+            String(e.reason).includes('WebSocket'))
+        ) {
+          e.preventDefault?.();
+          e.stopImmediatePropagation?.();
+        }
+      });
+    </script>
   </head>
   <body class="bg-[#0B0D11] text-[#F3F4F6] antialiased selection:bg-[#60A5FA]/30 selection:text-white">
     <div id="root"></div>

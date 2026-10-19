@@ -2,7 +2,7 @@
 
 ![System Architecture Diagram](./assets/architecture-diagram.svg)
 
-This document details the internal architecture, data models, deduplication algorithms, content routing heuristics, and neural speech synthesis pipeline powering **Discover Audio Radio & Agent Knowledge Vault**.
+This document details the internal architecture, data models, deduplication algorithms, content routing heuristics, and neural speech synthesis pipeline powering **Discover Radio: Audio Feed & Agent Knowledge Vault**.
 
 ---
 
